@@ -8,6 +8,7 @@ import cn.qiditu.property.WriteProperty;
 import cn.qiditu.signalslot.signals.Signal0;
 import cn.qiditu.signalslot.slots.Slot0;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Timer {
 
     /**
@@ -17,13 +18,16 @@ public class Timer {
      *     emitted by the user.
      * </p>
      */
+    @SuppressWarnings("WeakerAccess")
     public final Signal0 timeOut = new Signal0(this);
 
     /**
      * This property holds the timeout interval in milliseconds.
      * The default value for this property is 0.
      */
+    @SuppressWarnings("WeakerAccess")
     public final WriteProperty<Integer> writeInterval = new WriteProperty<>();
+    @SuppressWarnings("WeakerAccess")
     public final Property<Integer> interval = new Property<>(writeInterval, 0);
 
     /**
@@ -31,6 +35,7 @@ public class Timer {
      * The default value for this property is false.
      */
     private final WriteProperty<Boolean> writeActive = new WriteProperty<>();
+    @SuppressWarnings("WeakerAccess")
     public final Property<Boolean> active = new Property<>(writeActive, false);
 
     /**
@@ -38,7 +43,9 @@ public class Timer {
      * A single-shot timer fires only once, non-single-shot timers fire every interval milliseconds.
      * The default value for this property is false.
      */
+    @SuppressWarnings("WeakerAccess")
     public final WriteProperty<Boolean> writeSingleShot = new WriteProperty<>();
+    @SuppressWarnings("WeakerAccess")
     public final Property<Boolean> singleShot = new Property<>(writeSingleShot, false);
 
     /**
@@ -49,6 +56,7 @@ public class Timer {
      * @param msec The time interval is msec milliseconds.
      * @param slot The slot will work after time out.
      */
+    @SuppressWarnings("unused")
     public static void singleShot(int msec, @NonNull Slot0 slot) {
         Timer timer = new Timer();
         timer.writeInterval.set(msec);
@@ -65,6 +73,7 @@ public class Timer {
      * @param msec The time interval is msec milliseconds.
      * @param signal The signal will emit after time out.
      */
+    @SuppressWarnings("unused")
     public static void singleShot(int msec, @NonNull Signal0 signal) {
         Timer timer = new Timer();
         timer.writeInterval.set(msec);
@@ -76,6 +85,7 @@ public class Timer {
     /**
      * This function overloads start(int)
      */
+    @SuppressWarnings("WeakerAccess")
     public void start() {
         final Boolean value = active.get();
         if(value == null ? false : value) {
@@ -93,6 +103,7 @@ public class Timer {
      * If singleShot is true, the timer will be activated only once.
      * @param msec The time interval is msec milliseconds.
      */
+    @SuppressWarnings("unused")
     public void start(int msec) {
         writeInterval.set(msec);
         start();
@@ -101,6 +112,7 @@ public class Timer {
     /**
      * Stops the timer.
      */
+    @SuppressWarnings("WeakerAccess")
     public void stop() {
         Boolean value = active.get();
         if(value == null ? false : value) {
