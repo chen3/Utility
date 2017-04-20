@@ -3,8 +3,8 @@ package cn.qiditu.utility;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import cn.qiditu.property.Property;
-import cn.qiditu.property.WriteProperty;
+import cn.qiditu.property.ReadProperty;
+import cn.qiditu.property.ReadWriteProperty;
 import cn.qiditu.signalslot.signals.Signal0;
 import cn.qiditu.signalslot.slots.Slot0;
 
@@ -26,17 +26,18 @@ public class Timer {
      * The default value for this property is 0.
      */
     @SuppressWarnings("WeakerAccess")
-    public final WriteProperty<Integer> writeInterval = new WriteProperty<>();
-    @SuppressWarnings("WeakerAccess")
-    public final Property<Integer> interval = new Property<>(writeInterval, 0);
+    public final ReadWriteProperty<Integer> interval = new ReadWriteProperty<>(0);
 
     /**
      * This boolean property is true if the timer is running; otherwise false.
      * The default value for this property is false.
      */
-    private final WriteProperty<Boolean> writeActive = new WriteProperty<>();
-    @SuppressWarnings("WeakerAccess")
-    public final Property<Boolean> active = new Property<>(writeActive, false);
+    private final ReadWriteProperty<Boolean> active = new ReadWriteProperty<>(false);
+    @SuppressWarnings("unused")
+    @NonNull
+    public ReadProperty<Boolean> active() {
+        return active;
+    }
 
     /**
      * This property holds whether the timer is a single-shot timer.
@@ -44,9 +45,7 @@ public class Timer {
      * The default value for this property is false.
      */
     @SuppressWarnings("WeakerAccess")
-    public final WriteProperty<Boolean> writeSingleShot = new WriteProperty<>();
-    @SuppressWarnings("WeakerAccess")
-    public final Property<Boolean> singleShot = new Property<>(writeSingleShot, false);
+    public final ReadWriteProperty<Boolean> singleShot = new ReadWriteProperty<>(false);
 
     /**
      * This static function calls a slot after a given time interval.
@@ -59,8 +58,8 @@ public class Timer {
     @SuppressWarnings("unused")
     public static void singleShot(int msec, @NonNull Slot0 slot) {
         Timer timer = new Timer();
-        timer.writeInterval.set(msec);
-        timer.writeSingleShot.set(true);
+        timer.interval.set(msec);
+        timer.singleShot.set(true);
         timer.timeOut.connect(slot);
         timer.start();
     }
@@ -76,8 +75,8 @@ public class Timer {
     @SuppressWarnings("unused")
     public static void singleShot(int msec, @NonNull Signal0 signal) {
         Timer timer = new Timer();
-        timer.writeInterval.set(msec);
-        timer.writeSingleShot.set(true);
+        timer.interval.set(msec);
+        timer.singleShot.set(true);
         timer.timeOut.connect(signal);
         timer.start();
     }
@@ -93,7 +92,7 @@ public class Timer {
         }
         final Integer integer = interval.get();
         if(handler.postDelayed(runnable, integer == null ? 0 : integer)) {
-            writeActive.set(true);
+            active.set(true);
         }
     }
 
@@ -105,7 +104,7 @@ public class Timer {
      */
     @SuppressWarnings("unused")
     public void start(int msec) {
-        writeInterval.set(msec);
+        interval.set(msec);
         start();
     }
 
@@ -129,7 +128,7 @@ public class Timer {
         public void run() {
             final Boolean value = singleShot.get();
             if(value == null ? false : value) {
-                writeActive.set(false);
+                active.set(false);
             }
             else {
                 final Integer integer = interval.get();
